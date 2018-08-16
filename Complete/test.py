@@ -4,7 +4,7 @@ from pracmln import query, learn
 from pracmln.mlnlearn import EVIDENCE_PREDS
 import time
 
-def test_inference_smokers(arg='.'):
+def test_inference_smokers(arg='.', disp=False):
     pth = os.path.join(arg, 'wts.pybpll.smoking-train-smoking.mln')
     mln = MLN(mlnfile=pth, grammar='StandardGrammar')
     pth = os.path.join(arg, 'smoking-test-smaller.db')
@@ -16,15 +16,23 @@ def test_inference_smokers(arg='.'):
                    ):
         for multicore in (False, True):
             print('=== INFERENCE TEST:', method, '===')
-            query(queries='Cancer,Smokes,Friends',
-                  method=method,
-                  mln=mln,
-                  db=db,
-                  verbose=False,
-                  multicore=multicore).run()
+            if disp:
+                query(queries='Cancer,Smokes,Friends',
+                      method=method,
+                      mln=mln,
+                      db=db,
+                      verbose=disp,
+                      multicore=multicore).run().write()
+            else:
+                query(queries='Cancer,Smokes,Friends',
+                      method=method,
+                      mln=mln,
+                      db=db,
+                      verbose=disp,
+                      multicore=multicore).run()
 
 
-def test_learning_smokers(arg='.'):
+def test_learning_smokers(arg='.', disp=False):
     pth = os.path.join(arg, 'smoking.mln')
     mln = MLN(mlnfile=pth, grammar='StandardGrammar')
     pth = os.path.join(arg, 'smoking-train.db')
@@ -32,11 +40,19 @@ def test_learning_smokers(arg='.'):
     for method in ('BPLL', 'BPLL_CG', 'CLL'):
         for multicore in (True, False):
             print('=== LEARNING TEST:', method, '===')
-            learn(method=method,
-                  mln=mln,
-                  db=db,
-                  verbose=False,
-                  multicore=multicore).run()
+            if disp:
+                query(queries='Cancer,Smokes,Friends',
+                      method=method,
+                      mln=mln,
+                      db=db,
+                      verbose=disp,
+                      multicore=multicore).run().write()
+            else:
+                learn(method=method,
+                      mln=mln,
+                      db=db,
+                      verbose=disp,
+                      multicore=multicore).run()
 
 def runall():
     start = time.time()
